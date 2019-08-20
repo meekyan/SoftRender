@@ -1,0 +1,10 @@
+﻿  Martix.cpp
+c:\users\meekyan\documents\visual studio 2017\projects\ysoftrender\ysoftrender\martix.cpp(3): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  Render.cpp
+c:\users\meekyan\documents\visual studio 2017\projects\ysoftrender\ysoftrender\render.cpp(3): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  VerTex.cpp
+c:\users\meekyan\documents\visual studio 2017\projects\ysoftrender\ysoftrender\vertex.cpp(1): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  YSoftRender.cpp
+  Math.cpp
+c:\users\meekyan\documents\visual studio 2017\projects\ysoftrender\ysoftrender\math.cpp(7): fatal error C1010: 在查找预编译头时遇到意外的文件结尾。是否忘记了向源中添加“#include "pch.h"”?
+  正在生成代码...
