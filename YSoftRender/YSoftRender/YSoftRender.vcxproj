@@ -154,6 +154,7 @@
     <ClInclude Include="Martix.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Render.h" />
+    <ClInclude Include="Screen.h" />
     <ClInclude Include="Vertex.h" />
     <ClInclude Include="Math.h" />
   </ItemGroup>
@@ -166,6 +167,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Render.cpp" />
+    <ClCompile Include="Screen.cpp" />
     <ClCompile Include="VerTex.cpp" />
     <ClCompile Include="YSoftRender.cpp" />
     <ClCompile Include="Math.cpp" />
