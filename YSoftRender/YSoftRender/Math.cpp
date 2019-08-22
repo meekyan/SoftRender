@@ -1,6 +1,7 @@
-#include "Math.h"
-
-class Math
-{
-
-};
+//#include "Math.h"
+//
+//class Math
+//{
+//
+//};
+#include "pch.h"
