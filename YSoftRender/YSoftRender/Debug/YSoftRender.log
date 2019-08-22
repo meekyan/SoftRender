@@ -1,3 +1,2 @@
-﻿  Screen.cpp
-d:\mygithub\softrender\ysoftrender\ysoftrender\screen.cpp(24): warning C4838: 从“int”转换到“DWORD”需要收缩转换
+﻿  YSoftRender.cpp
   YSoftRender.vcxproj -> D:\MygitHub\SoftRender\YSoftRender\Debug\YSoftRender.exe
