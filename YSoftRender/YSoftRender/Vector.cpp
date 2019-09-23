@@ -2,9 +2,6 @@
 #include "Vector.h"
 
 
-Vector::Vector()
-{
-}
 
 float Vector::Length() const
 {
