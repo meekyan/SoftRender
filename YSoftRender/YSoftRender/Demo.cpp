@@ -7,14 +7,17 @@ Demo::Demo() : m_theta(1.5f * MathUtil::PI), m_phi(0.4*MathUtil::PI), m_radius(5
 	m_world = MathUtil::MartixIdentity();
 }
 
-void Demo::Init()
+void Demo::Init(UINT32* Framebuffer)
 {
 	float halfW = 2 * 0.5f;
 	float halfH = 2 * 0.5f;
 	float halfD = 2 * 0.5f;
+
+	m_vertices.clear();
+	m_indices.clear();
 //创建一些顶点 4个
 	m_vertices.resize(4);//先搞一个面
-	m_indices.resize(6);//一个面 画2个三角形
+	m_indices.resize(10);//一个面 画2个三角形
 
 	m_vertices[0].pos = Vector(-halfW, -halfH, -halfD, 1.f);
 	m_vertices[0].normal = Vector(0.f, 0.f, -1.f);
@@ -32,7 +35,7 @@ void Demo::Init()
 	m_vertices[3].normal = Vector(0.f, 0.f, -1.f);
 	m_vertices[3].color = Vector(0.f, 1.f, 0.f, 1.f);
 	m_vertices[3].tex = FLOAT2(1.f, 1.f);
-
+	 
 	//构建索引
 	m_indices[0] = 0;
 	m_indices[1] = 1;
@@ -45,6 +48,12 @@ void Demo::Init()
 	Cwidth = 800;
 
 	m_Shader = new Shader();//着色器
+
+	m_pFramebuffer = (UINT32**)malloc(Cheight * sizeof(UINT32*));
+	for (int i = 0; i < Cheight; ++i)
+	{
+		m_pFramebuffer[i] = Framebuffer + i * Cwidth;
+	}
 }
 
 void Demo::Update()
@@ -97,24 +106,27 @@ void Demo::SoftRender()
 		v2.posH = v2.posH * ScreenTransform;
 		v3.posH = v3.posH * ScreenTransform;
 
-		DrawTriangle(v1, v2, v3);
+		SortAndDrawTriangle(v1, v2, v3);
 	}
 }
-
-void Demo::DrawTriangle(const VertexOut& v1, const VertexOut& v2, const VertexOut& v3)
+void Demo::SortAndDrawTriangle(VertexOut& v1, VertexOut& v2, VertexOut& v3)
 {
 	if (v1.posH.y > v2.posH.y)
 	{
-		std::swap(v1, v2);
+		MathUtil::Swap(v1, v2);
 	}
 	if (v2.posH.y > v3.posH.y)
 	{
-		std::swap(v2, v3);
+		MathUtil::Swap(v2, v3);
 	}
 	if (v1.posH.y > v2.posH.y)
 	{
-		std::swap(v1, v2);
+		MathUtil::Swap(v1, v2);
 	}
+	DrawTriangle(v1, v2, v3);
+}
+void Demo::DrawTriangle(const VertexOut& v1, const VertexOut& v2, const VertexOut& v3)
+{
 	float dy = 0;
 	for (float y = v1.posH.y; y <= v3.posH.y; y += 1.0f)
 	{

@@ -32,6 +32,8 @@ namespace MathUtil
 //								     	 近裁剪平面   远裁剪平面   屏幕大小       
 	Martix MartixPerspectiveFovLH(float n, float f, float r, float t);
 
+	Martix MartixPerspectiveFovLH2(float n, float f, float r, float t);
+
 	//投影-》屏幕
 	Martix MartixScreenTransform(int clientWidth, int clientHeight);
 
@@ -50,5 +52,7 @@ namespace MathUtil
 	//VertexOut插值
 	VertexOut Lerp(const VertexOut& v1, const VertexOut& v2, float t);
 
-	UINT MathUtil::ColorToUINT(const Vector& color);
+	UINT32 ColorToUINT(const Vector& color);
+
+	void Swap(VertexOut& v1, VertexOut& v2);
 }

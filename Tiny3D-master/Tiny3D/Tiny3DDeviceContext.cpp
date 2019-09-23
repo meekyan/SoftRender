@@ -59,7 +59,7 @@ void Tiny3DDeviceContext::DrawIndexed(UINT indexCount, UINT startIndexLocation, 
 		VertexIn p2 = m_vertices[startVertexLocation + m_indices[3 * i + 1]];
 		VertexIn p3 = m_vertices[startVertexLocation + m_indices[3 * i + 2]];
 		//±³ÃæÏûÒþ
-		if (BackFaceCulling(p1, p2, p3) == false)
+		if (BackFaceCulling(p1, p2, p3) == false)                                                                                                                                         
 		{
 			continue;
 		}

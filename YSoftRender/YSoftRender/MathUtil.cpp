@@ -53,8 +53,9 @@ Martix MathUtil::MatrixTranslate(float offsetX, float offsetY, float offsetZ)
 Martix MathUtil::GetLookAt(Vector eyePos, Vector lookAt, Vector up)
 {
 	Vector zv = lookAt - eyePos;
+	zv.Normalize();
 	Vector xv = up.Cross(zv).Normalize();
-	Vector yv = zv.Cross(xv).Normalize();
+	Vector yv = zv.Cross(xv);
 	return Martix(
 		xv.x, yv.x, zv.x, 0,
 		xv.y, yv.y, zv.y, 0,
@@ -76,6 +77,22 @@ Martix MathUtil::MartixPerspectiveFovLH(float n, float f,float r,float t)
 	mat._32 = -1;
 	return mat;
 }
+//获取投影矩阵 同dx中的XMMatrixPerspectiveFovLH
+//									             观察角            宽高比       近裁剪平面   远裁剪平面       
+Martix MathUtil::MartixPerspectiveFovLH2(float fovAngleY, float aspectRatio, float nearZ, float farZ)
+{
+	Martix mat;
+	mat.SetZero();
+	// tan(fovAngleY*0.5f)
+	float height = cos(fovAngleY*0.5f) / sin(fovAngleY*0.5f);
+	mat._00 = height / aspectRatio;
+	mat._11 = height;
+	mat._22 = farZ / (farZ - nearZ);
+	mat._23 = 1.f;
+	mat._32 = (nearZ * farZ) / (nearZ - farZ);
+	return mat;
+}
+
 
 
 Martix MathUtil::MartixScreenTransform(int clientWidth, int clientHeight)
@@ -138,10 +155,19 @@ VertexOut MathUtil::Lerp(const VertexOut& v1, const VertexOut& v2, float t)
 }
 
 //颜色Float3(r,b,g,a)转化为UINT
-UINT MathUtil::ColorToUINT(const Vector& color)
+UINT32 MathUtil::ColorToUINT(const Vector& color)
 {
 	BYTE red = 255 * color.x/*  color.w*/;
 	BYTE green = 255 * color.y/* color.w*/;
 	BYTE blue = 255 * color.z /* color.w*/;
-	return (UINT)((BYTE)blue | (WORD)((BYTE)green << 8) | (DWORD)((BYTE)red << 16));
+	UINT32 color_num = ((UINT32)((BYTE)blue | (WORD)((BYTE)green << 8) | (DWORD)((BYTE)red << 16)));
+
+	return (UINT32)color_num;
+}
+
+void MathUtil::Swap(VertexOut& v1, VertexOut& v2)
+{
+	VertexOut tmp = v1;
+	v1 = v2;
+	v2 = tmp;
 }

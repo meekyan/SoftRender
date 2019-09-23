@@ -15,7 +15,7 @@ public:
 	int isExit(); // ÊÇ·ñ¹Ø±Õ
 	LPVOID getFrameBuffer();
 
-private:
+public:
 	HWND wndHandle;
 	HDC wndDc;
 	HBITMAP wndHb;

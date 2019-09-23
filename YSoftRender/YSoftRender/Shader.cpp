@@ -72,6 +72,8 @@ Vector Shader::PS(VertexOut& pin)
 	////最终颜色透明度使用漫反射光的透明度
 	//litColor.w = m_material.diffuse.w * texColor.w;
 	Vector litColor;
-	return litColor;
+
+
+	return pin.color;
 }
 
