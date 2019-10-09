@@ -7,8 +7,12 @@ Demo::Demo() : m_theta(1.5f * MathUtil::PI), m_phi(0.4*MathUtil::PI), m_radius(5
 	m_world = MathUtil::MartixIdentity();
 }
 
-void Demo::Init(UINT32* Framebuffer)
+void Demo::Init(UINT32* Framebuffer, HINSTANCE hInstance, HWND hWnd)
 {
+
+	m_hWnd = hWnd;
+	m_hInstance = hInstance;
+
 	float halfW = 2 * 0.5f;
 	float halfH = 2 * 0.5f;
 	float halfD = 2 * 0.5f;
@@ -17,20 +21,23 @@ void Demo::Init(UINT32* Framebuffer)
 	m_indices.clear();
 //创建一些顶点 4个
 	m_vertices.resize(4);//先搞一个面
-	m_indices.resize(10);//一个面 画2个三角形
+	m_indices.resize(6);//一个面 画2个三角形
 
 	m_vertices[0].pos = Vector(-halfW, -halfH, -halfD, 1.f);
 	m_vertices[0].normal = Vector(0.f, 0.f, -1.f);
 	m_vertices[0].color = Vector(1.f, 0.f, 0.f, 1.f);
 	m_vertices[0].tex = FLOAT2(0.f, 1.f);
+
 	m_vertices[1].pos = Vector(-halfW, halfH, -halfD, 1.f);
 	m_vertices[1].normal = Vector(0.f, 0.f, -1.f);
 	m_vertices[1].color = Vector(0.f, 0.f, 0.f, 1.f);
 	m_vertices[1].tex = FLOAT2(0.f, 0.f);
+
 	m_vertices[2].pos = Vector(halfW, halfH, -halfD, 1.f);
 	m_vertices[2].normal = Vector(0.f, 0.f, -1.f);
 	m_vertices[2].color = Vector(1.f, 0.f, 0.f, 1.f);
 	m_vertices[2].tex = FLOAT2(1.f, 0.f);
+
 	m_vertices[3].pos = Vector(halfW, -halfH, -halfD, 1.f);
 	m_vertices[3].normal = Vector(0.f, 0.f, -1.f);
 	m_vertices[3].color = Vector(0.f, 1.f, 0.f, 1.f);
@@ -44,8 +51,11 @@ void Demo::Init(UINT32* Framebuffer)
 	m_indices[4] = 2;
 	m_indices[5] = 3;
 
-	Cheight = 800;
-	Cwidth = 800;
+	RECT rc;
+	GetClientRect(m_hWnd, &rc);
+
+	Cheight = rc.bottom - rc.top;
+	Cwidth = rc.right - rc.left;
 
 	m_Shader = new Shader();//着色器
 
@@ -67,10 +77,11 @@ void Demo::Update()
 	Vector Target(0.f, 0.f, 0.f, 1.0f);
 	Vector up(0.f, 1.f, 0.f, 0.0f);
 	Martix view = MathUtil::GetLookAt(pos, Target, up);
-	Martix proj = MathUtil::MartixPerspectiveFovLH(1.f,100.f, Cwidth/2, Cheight/2);
+	//Martix proj = MathUtil::MartixPerspectiveFovLH(1.f,100.f, Cwidth/2, Cheight/2);
+	Martix proj = MathUtil::MartixPerspectiveFovLH2(MathUtil::PI / 4, Cwidth*1.0f/Cheight, 1.f, 100.f);
 
 	Martix world = MathUtil::MartixIdentity();
-	m_worldViewProj = world * view * proj;
+	m_worldViewProj = world*view*proj;
 	m_world = world;
 
 	m_Shader->SetWorldViewProj(m_worldViewProj);
@@ -101,7 +112,7 @@ void Demo::SoftRender()
 		}
 		ToCVV(v1);
 		ToCVV(v2);
-		ToCVV(v3);
+		ToCVV(v3);//在进行顶点剔除的时候就不需要进行除法运算
 		v1.posH = v1.posH * ScreenTransform;
 		v2.posH = v2.posH * ScreenTransform;
 		v3.posH = v3.posH * ScreenTransform;
@@ -155,11 +166,10 @@ void Demo::fill(int Y, const VertexOut& left, const VertexOut& right)
 	for (int x = left.posH.x; x <= right.posH.x; x += 1.0f)
 	{
 		int X = static_cast<int>(x + 0.5f);
-		if (X < Cwidth) continue;
+		if (X > Cwidth) continue;
 		float K = 0;
 		if(right.posH.x - left.posH.x != 0)
 			K = (x - left.posH.x) / (right.posH.x - left.posH.x);
-		//1/z’与x’和y'是线性关系的
 		float oneDivZ = MathUtil::Lerp(left.oneDivZ, right.oneDivZ, K);
 		float w = 1 / oneDivZ;
 		//插值顶点 原先需要插值的信息均乘以oneDivZ
@@ -220,5 +230,5 @@ void Demo::ToCVV(VertexOut& v)
 //画像素
 void Demo::DrawPixel(int x, int y, Vector color)
 {
-	m_pFramebuffer[Cwidth*y + x] = MathUtil::ColorToUINT(color);
+	m_pFramebuffer[x][y] = (UINT32)MathUtil::ColorToUINT(color);
 }
